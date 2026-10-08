@@ -1,3 +1,5 @@
+console.log("JavaScript is connected!");
+
 const dropZone = document.getElementById("drag-and-drop");
 dropZone.addEventListener("drop", dropHandler);
 window.addEventListener("drop", (e) => {
@@ -33,7 +35,7 @@ function dropHandler(ev) {
   const files = [...ev.dataTransfer.items]
     .map((item) => item.getAsFile())
     .filter((file) => file);
-  displayImages(files);
+  displayFile(files);
 }
 
 function displayFile(files) {

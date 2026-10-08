@@ -1,0 +1,5 @@
+This is what to do if you want to test the website:
+First copy 'python app.py' into the ternminal
+Then copy the url 'http://127.0.0.1:5000/' into your browser. This is the main version of the project.
+Alternatively, if you want to use the test version then use the url 'http://127.0.0.1:5000/test'. If this says 'url not found' then refer to 'app.py'. 
+If 'target' is seen inside then the project is expecting a search value inside the url, so use something like 'http://127.0.0.1:5000/test/3'.
