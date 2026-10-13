@@ -13,7 +13,7 @@ body {
   background-position: 0 0, 10px 10px;
 }
 
-#drag-and-drop {
+.drag-and-drop {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,19 +21,25 @@ body {
   max-width: 100%;
   height: 200px;
   padding: 1em;
-  color: slategray;
+  color: black;
   cursor: pointer;
   font-family: "Clarity City", Helvetica, sans-serif;
 }
 
-#clear-button {
+.clear-button {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: "Clarity City", Helvetica, sans-serif;
 }
 
-#file-input {
+.file-input {
   display: none;
+}
+
+.file-text {
+  text-align: center;
+  font-family: "Clarity City", Helvetica, sans-serif;
 }
 
 .card {
@@ -54,6 +60,9 @@ body {
 
 .large-card {
   height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .shadow {

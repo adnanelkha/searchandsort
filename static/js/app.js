@@ -1,44 +1,32 @@
 console.log("JavaScript is connected!");
 
 const dropZone = document.getElementById("drag-and-drop");
-dropZone.addEventListener("drop", dropHandler);
-window.addEventListener("drop", (e) => {
-  if ([...e.dataTransfer.items].some((item) => item.kind === "file")) {
-    e.preventDefault();
-  }
-});
+const output = document.getElementById("myText");
 
-dropZone.addEventListener("dragover", (e) => {
-    const fileItems = [...e.dataTransfer.items].filter(
-        (item) => item.kind === "file",
-    );
-    if (fileItems.length > 0) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = "copy";
-    }
-});
+if (!dropZone || !output) {
+    console.error("Could not find the drop zone or file display.");
+} else {
+    console.log("Drop zone found!");
+    dropZone.addEventListener("dragover", (event) => {
+        event.preventDefault();
+    });
 
-window.addEventListener("dragover", (e) => {
-    const fileItems = [...e.dataTransfer.items].filter(
-        (item) => item.kind === "file",
-    );
-    if (fileItems.length > 0) {
-        e.preventDefault();
-        if (!dropZone.contains(e.target)) {
-            e.dataTransfer.dropEffect = "none";
+    dropZone.addEventListener("drop", (event) => {
+        event.preventDefault();
+        const files = Array.from(event.dataTransfer.files);
+        if (files.length === 0) {
+            output.textContent = "No files detected.";
+            return;
         }
-    }
-});
+        output.textContent = files.map(file => file.name).join(", ");
+        console.log("Files dropped:", files);
+    });
 
-function dropHandler(ev) {
-  ev.preventDefault();
-  const files = [...ev.dataTransfer.items]
-    .map((item) => item.getAsFile())
-    .filter((file) => file);
-  displayFile(files);
-}
+    window.addEventListener("dragover", (event) => {
+        event.preventDefault();
+    });
 
-function displayFile(files) {
-    FileName = files.name
-    document.getElementById("myText").innerHTML = FileName;
+    window.addEventListener("drop", (event) => {
+        event.preventDefault();
+    });
 }

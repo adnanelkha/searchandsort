@@ -2,30 +2,34 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Search and Sort</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-	<link rel="icon" type="image/png" href="/images/favicon.png">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&display=swap"
-		rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search and Sort</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/png"
+          href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
 </head>
 
 <body>
-	<script src="{{ url_for('static', filename='js/app.js') }}"></script>
-	<div class="card shadow title-card">
-		<h1>Search and Sort</h1>
-	</div>
-	<div class="card shadow large-card">
-		<div id="drag-and-drop">
-			Drop files here
-			<input type="file" id="file-input" accept=".csv,text/csv"/> <!-- make it so it can only accept csv files -->
+    <div class="card shadow title-card">
+        <h1>Search and Sort</h1>
+    </div>
+    <div class="card shadow large-card">
+        <div id="drag-and-drop" class="drag-and-drop">
+    		Drop files here
 		</div>
-	<div class = "clear-button">
-		<button id="clear-button">Clear</button>
-	</div>
+		<p class="file-text">
+    		Selected files: <span id="myText">None</span>
+		</p>
+    </div>
+    <div class="clear-button">
+        <button id="clear-button">Clear</button>
+    </div>
 </body>
-
 </html>
