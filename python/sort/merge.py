@@ -1,4 +1,6 @@
 def mergesort(data):
+    import time
+    start = time.perf_counter()
     if len(data) > 1: 
         mid = len(data)//2
         lefthalf = data[:mid]
@@ -29,3 +31,4 @@ def mergesort(data):
             k += 1
         
         return(data)
+    
