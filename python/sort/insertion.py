@@ -1,4 +1,4 @@
-def insertion(data):
+def insertion_sort(data):
     datalen = len(data)
     for i in range(1, datalen):
         if datalen <= 1:

@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request, jsonify
 from python.search.linear import linear_search
+from python.search.binary import binary_search
+from python.sort.bubble import bubble_sort
+from python.sort.insertion import insertion_sort
+from python.sort.merge import merge_sort
+from python.sort.quick import quick_sort, _quick_sort, partition
 
 algorithm_types = {
     "linear": "search",

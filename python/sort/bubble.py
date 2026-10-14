@@ -1,4 +1,4 @@
-def bubble(data):
+def bubble_sort(data):
     datalen = len(data)
     for i in range(datalen-1):
         for j in range(datalen-i-1):
