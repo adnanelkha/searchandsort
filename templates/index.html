@@ -25,21 +25,24 @@
     		Drop files here
 		</div>
 		<p class="file-text">
-    		Selected files: <span id="myText">None</span>
+    		Selected file: <span id="myText">None</span>
 		</p>
     </div>
     <div class="card shadow small-card">
         <select name="searches" id="search select">
-            <option value="">Select a search algorithm</option>
-            <option value="binary">Binary</option>
-            <option value="linear">Linear</option>
-        </select>
-        <select name="sorts" id="sort select">
-            <option value="">Select a sort algorithm</option>
-            <option value="bubble">Bubble</option>
-            <option value="insertion">Insertion</option>
-            <option value="merge">Merge</option>
-            <option value="quick">quick</option>
+            <option value="">Select an algorithm</option>
+            <hr />
+            <optgroup label="Searches">
+                <option value="binary">Binary</option>
+                <option value="linear">Linear</option>
+            </optgroup>
+            <hr />
+            <optgroup label="Sorts">
+                <option value="bubble">Bubble</option>
+                <option value="insertion">Insertion</option>
+                <option value="merge">Merge</option>
+                <option value="quick">quick</option>
+            </optgroup>
         </select>
     </div>
 </body>
