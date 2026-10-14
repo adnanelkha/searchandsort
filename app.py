@@ -50,7 +50,12 @@ def search_request():
     if algorithm_name == "linear":
         index = linear_search(values, search_term)
     elif algorithm_name == "binary":
-        index = binary_search(values, search_term)
+        if values != sorted(values):
+            return jsonify({
+                "error": "Binary Search requires sorted data. Please sort your CSV data and upload it again."
+            }), 400
+        else:
+            index = binary_search(values, search_term)
     else:
         return jsonify({"error": "Search algorithm not found"}), 400
     return jsonify({"index": index})
