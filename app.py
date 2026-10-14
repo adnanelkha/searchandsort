@@ -1,6 +1,24 @@
 from flask import Flask, render_template, request
 from python.search.linear import linear_search
 
+algorithm_types = {
+    "linear": "search",
+    "binary": "search",
+    "bubble": "sort",
+    "insertion": "sort",
+    "quick": "sort",
+    "merge": "sort"
+}
+
+algorithm_names = {
+    "linear": "Linear Search",
+    "binary": "Binary Search",
+    "bubble": "Bubble Sort",
+    "insertion": "Insertion Sort",
+    "quick": "Quick Sort",
+    "merge": "Merge Sort"
+}
+
 app = Flask(__name__)
 
 
@@ -17,20 +35,14 @@ def test(target):
 @app.route("/algorithm")
 def algorithm ():
     algorithm_name = request.args.get("algorithm")
-    for i in range (0,len(algorithm_name)):
-        if algorithm_name[i] == " ":
-            if algorithm_name[i+2] == "e":
-                return render_template(
-                    "search_algorithm.html",
-                    algorithm_name=algorithm_name
-                )
-            else:
-                return render_template(
-                    "sort_algorithm.html",
-                    algorithm_name=algorithm_name
-                )
-        else:
-            pass
+    algorithm_type = algorithm_types.get(algorithm_name)
+    display_name=algorithm_names.get(algorithm_name)
+    if algorithm_type == "search":
+        return render_template("search_algorithm.html",algorithm_name=display_name)
+    elif algorithm_type == "sort":
+        return render_template("sort_algorithm.html",algorithm_name=display_name)
+    else:
+        return "Unknown algorithm"
 
 if __name__ == "__main__":
     app.run(debug=True)
