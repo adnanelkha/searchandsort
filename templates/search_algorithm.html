@@ -18,10 +18,12 @@
 
 <body>
     <div class="card shadow title-card">
-        <h1>{{ algorithm_name }}</h1>
+        <h1>{{ display_name }}</h1>
     </div>
     <div class="card shadow small-card">
-        <input type="search" id="site-search" name="q" />
-        <button>Search</button>
+        <form action="/search" method="GET" id="search-form">
+            <input type="search" id="site-search" name="q" placeholder="Enter an item to search for" required/>
+            <button type="submit">Search</button>
+        </form>
     </div>
 </body>

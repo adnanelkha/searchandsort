@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from python.search.linear import linear_search
 
 algorithm_types = {
@@ -21,16 +21,25 @@ algorithm_names = {
 
 app = Flask(__name__)
 
+uploaded_data = []
+
+@app.route("/upload-data", methods=["POST"])
+def upload_data():
+    data = request.get_json()
+    if not data or "values" not in data:
+        return jsonify({"error": "No data received"}), 400
+    values = data["values"]
+    uploaded_data.clear()
+    uploaded_data.append(values)
+    return jsonify({
+        "message": "Data received successfully!",
+        "count": len(values)
+    })
+
 
 @app.route("/")
 def index():
     return render_template("index.html")
-
- #look at these next few lines if you are having problems with url
-@app.route("/test/<int:target>")
-def test(target):
-    result = linear_search([1, 2, 3, 4, 5], target)
-    return str(result)
 
 @app.route("/algorithm")
 def algorithm ():
@@ -38,9 +47,9 @@ def algorithm ():
     algorithm_type = algorithm_types.get(algorithm_name)
     display_name=algorithm_names.get(algorithm_name)
     if algorithm_type == "search":
-        return render_template("search_algorithm.html",algorithm_name=display_name)
+        return render_template("search_algorithm.html",display_name=display_name,algorithm_name=algorithm_name)
     elif algorithm_type == "sort":
-        return render_template("sort_algorithm.html",algorithm_name=display_name)
+        return render_template("sort_algorithm.html",display_name=display_name,algorithm_name=algorithm_name)
     else:
         return "Unknown algorithm"
 
