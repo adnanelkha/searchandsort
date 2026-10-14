@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet">
-    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </head>
 
 <body>
@@ -21,9 +21,10 @@
         <h1>{{ display_name }}</h1>
     </div>
     <div class="card shadow small-card">
-        <form action="/search" method="GET" id="search-form">
-            <input type="search" id="site-search" name="q" placeholder="Enter an item to search for" required/>
+        <form action="/search" method="POST" id="search-form">
+            <input type="search" id="site-search" name="search-term" placeholder="Enter an item to search for" required/>
             <button type="submit">Search</button>
         </form>
+        <p id="search-result" aria-live="polite"></p>
     </div>
 </body>

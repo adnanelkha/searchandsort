@@ -37,9 +37,23 @@ def upload_data():
     uploaded_data.clear()
     uploaded_data.append(values)
     return jsonify({
-        "message": "Data received successfully!",
+        "message": "Data received successfully",
         "count": len(values)
     })
+
+@app.route("/search", methods=["POST"])
+def search_request():
+    data = request.get_json()
+    search_term = data.get("search_term")
+    values = uploaded_data
+    algorithm_name = data.get("algorithm")
+    if algorithm_name == "linear":
+        index = linear_search(values, search_term)
+    elif algorithm_name == "binary":
+        index = binary_search(values, search_term)
+    else:
+        return jsonify({"error": "Search algorithm not found"}), 400
+    return jsonify({"index": index})
 
 
 @app.route("/")

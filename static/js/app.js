@@ -59,3 +59,46 @@ if (!dropZone || !output) {
         event.preventDefault();
     });
 }
+
+
+const searchForm = document.getElementById("search-form");
+console.log("Search form found:", searchForm);
+const searchInput = document.getElementById("site-search");
+const searchResult = document.getElementById("search-result");
+
+if (searchForm && searchInput && searchResult) {
+    searchForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const searchTerm = searchInput.value.trim();
+        if (searchTerm === "") {
+            searchResult.textContent = "Please enter something to search for.";
+            return;
+        }
+        try {
+            const response = await fetch("/search", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    search_term: searchTerm,
+                    algorithm: "linear"
+                })
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                searchResult.textContent = result.error || "Search failed.";
+                return;
+            }
+            if (result.index === -1) {
+                searchResult.textContent = "Item not found.";
+            } else {
+                searchResult.textContent =
+                    `Item found at index ${result.index}.`;
+            }
+        } catch (error) {
+            searchResult.textContent = "Could not connect to the server.";
+            console.error("Search error:", error);
+        }
+    });
+}
