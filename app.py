@@ -35,7 +35,7 @@ def upload_data():
         return jsonify({"error": "No data received"}), 400
     values = data["values"]
     uploaded_data.clear()
-    uploaded_data.append(values)
+    uploaded_data.extend(values)
     return jsonify({
         "message": "Data received successfully",
         "count": len(values)
