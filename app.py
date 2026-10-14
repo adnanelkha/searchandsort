@@ -17,10 +17,20 @@ def test(target):
 @app.route("/algorithm")
 def algorithm ():
     algorithm_name = request.args.get("algorithm")
-    return render_template(
-        "algorithm.html",
-        algorithm_name=algorithm_name
-    )
+    for i in range (0,len(algorithm_name)):
+        if algorithm_name[i] == " ":
+            if algorithm_name[i+2] == "e":
+                return render_template(
+                    "search_algorithm.html",
+                    algorithm_name=algorithm_name
+                )
+            else:
+                return render_template(
+                    "sort_algorithm.html",
+                    algorithm_name=algorithm_name
+                )
+        else:
+            pass
 
 if __name__ == "__main__":
     app.run(debug=True)
