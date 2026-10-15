@@ -5,11 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search and Sort</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/png"
+          href="{{ url_for('static', filename='images/favicon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Clarity+City:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
     <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
 </head>
 
@@ -17,26 +20,24 @@
     <div class="card shadow title-card">
         <h1>Search and Sort</h1>
     </div>
-
     <div class="card shadow large-card">
-        <div id="drag-and-drop" class="drag-and-drop" role="button" tabindex="0">
-            Drop files here or click to browse
-        </div>
-        <input type="file" id="file-input" accept=".csv,text/csv" hidden>
-        <p class="file-text">
-            <span id="myText">None</span>
-        </p>
+        <div id="drag-and-drop" class="drag-and-drop">
+    		Drop files here
+		</div>
+		<p class="file-text">
+    		<span id="myText">None</span>
+		</p>
     </div>
-
-
     <div class="card shadow small-card">
-        <form id="algorithm-form" action="/algorithm" method="GET">
-            <select id="algorithm" name="algorithm" required>
+        <form action="/algorithm" method="GET">
+            <select name="algorithm">
                 <option value="">Select an algorithm</option>
+                <hr />
                 <optgroup label="Searches">
                     <option value="binary">Binary</option>
                     <option value="linear">Linear</option>
                 </optgroup>
+                <hr />
                 <optgroup label="Sorts">
                     <option value="bubble">Bubble</option>
                     <option value="insertion">Insertion</option>
@@ -47,15 +48,5 @@
             <button type="submit">Run</button>
         </form>
     </div>
-
-    <div class="card shadow small-card">
-        <form id="search-form">
-            <input type="text" id="site-search" name="search_term" placeholder="Enter a value to search for"
-                autocomplete="off" required>
-            <button type="submit">Search</button>
-        </form>
-        <p id="search-result" role="status"></p>
-    </div>
 </body>
-
 </html>

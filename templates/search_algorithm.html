@@ -26,6 +26,11 @@
     <div class="card shadow small-card">
         <form action="/search" method="POST" id="search-form">
             <input type="search" id="site-search" name="search-term" placeholder="Enter an item to search for" required/>
+            <label for="data-type">Data type:</label>
+            <select id="data-type" name="data_type">
+                <option value="integer">Numbers (integers)</option>
+                <option value="string">Text (strings)</option>
+            </select>
             <button type="submit">Search</button>
         </form>
         <p id="search-result" aria-live="polite"></p>

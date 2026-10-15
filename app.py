@@ -44,9 +44,24 @@ def upload_data():
 @app.route("/search", methods=["POST"])
 def search_request():
     data = request.get_json()
+    if not data:
+        return jsonify({"error": "No search data received"}), 400
     search_term = data.get("search_term")
-    values = uploaded_data
     algorithm_name = data.get("algorithm")
+    data_type = data.get("data_type", "integer")
+    values = uploaded_data.copy()
+    if search_term is None or not algorithm_name:
+        return jsonify({"error": "Missing search term or algorithm"}), 400
+    if data_type == "integer":
+        try:
+            values = [int(value) for value in values]
+            search_term = int(search_term)
+        except (ValueError, TypeError):
+            return jsonify({
+                "error": "Numbers mode requires whole numbers in your CSV and search term."
+            }), 400
+    elif data_type != "string":
+        return jsonify({"error": "Invalid data type selected"}), 400
     if algorithm_name == "linear":
         index = linear_search(values, search_term)
     elif algorithm_name == "binary":
@@ -54,8 +69,7 @@ def search_request():
             return jsonify({
                 "error": "Binary Search requires sorted data. Please sort your CSV data and upload it again."
             }), 400
-        else:
-            index = binary_search(values, search_term)
+        index = binary_search(values, search_term)
     else:
         return jsonify({"error": "Search algorithm not found"}), 400
     return jsonify({"index": index})
