@@ -10,4 +10,4 @@ def insertion_sort(data):
                 data[j+1] = data[j]
                 j -= 1
             data[j+1] = key
-    return(data)
+    return data
