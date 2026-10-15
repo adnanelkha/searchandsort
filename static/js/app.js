@@ -2,113 +2,141 @@ console.log("JS is connected");
 
 const dropZone = document.getElementById("drag-and-drop");
 const output = document.getElementById("myText");
+const searchForm = document.getElementById("search-form");
+const searchInput = document.getElementById("site-search");
+const searchResult = document.getElementById("search-result");
+const algorithmSelect = document.getElementById("algorithm");
 
 let searchableData = [];
 
-if (!dropZone || !output) {
-    console.error("Could not find the drop zone or file display");
-} else {
-    console.log("Drop zone found");
+if (dropZone && output) {
     dropZone.addEventListener("dragover", (event) => {
         event.preventDefault();
+        dropZone.classList.add("drag-over");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("drag-over");
     });
 
     dropZone.addEventListener("drop", async (event) => {
         event.preventDefault();
-        const files = Array.from(event.dataTransfer.files);
-        if (files.length === 0) {
-            output.textContent = "No files detected";
+        dropZone.classList.remove("drag-over");
+
+        const file = event.dataTransfer.files[0];
+
+        if (!file) {
+            output.textContent = "Please drop a CSV file.";
             return;
         }
 
-        const file = files[0];
         if (!file.name.toLowerCase().endsWith(".csv")) {
-            output.textContent = "Please drop a CSV file";
+            output.textContent = "The file must be a CSV file.";
             return;
         }
 
         try {
             const contents = await file.text();
+
             searchableData = contents
-                .split(/\r?\n/) //split into rows
-                .flatMap(row => row.split(",")) //splits rows at commas, combines into one array
-                .map(value => value.trim()) //removes spaces around values
-                .filter(value => value.length > 0); //removes empty values
+                .replace(/^\uFEFF/, "")
+                .split(/\r?\n/)
+                .flatMap(row => row.split(","))
+                .map(value => value.trim())
+                .filter(value => value.length > 0);
+
+            if (searchableData.length === 0) {
+                output.textContent = "The CSV file is empty.";
+                return;
+            }
+
             output.textContent = file.name;
-            console.log("Searchable data:", searchableData);
+
             const response = await fetch("/upload-data", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({
                     values: searchableData
                 })
             });
+
             const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || "File upload failed.");
+            }
+
             console.log("Flask response:", result);
         } catch (error) {
-            output.textContent = "Could not read the file";
-            console.error("File reading error:", error);
+            output.textContent = error.message || "Could not read the file.";
+            console.error("Upload error:", error);
         }
-    });
-
-    window.addEventListener("dragover", (event) => {
-        event.preventDefault();
-    });
-
-    window.addEventListener("drop", (event) => {
-        event.preventDefault();
     });
 }
 
+window.addEventListener("dragover", (event) => {
+    event.preventDefault();
+});
 
-document.addEventListener("DOMContentLoaded", () => {
-    const searchForm = document.getElementById("search-form");
-    console.log("Search form found:", searchForm);
+window.addEventListener("drop", (event) => {
+    if (!dropZone || !dropZone.contains(event.target)) {
+        event.preventDefault();
+    }
+});
 
-    const searchInput = document.getElementById("site-search");
-    const searchResult = document.getElementById("search-result");
+if (searchForm && searchInput && searchResult) {
+    searchForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
 
-    if (searchForm && searchInput && searchResult) {
-        searchForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
+        const searchTerm = searchInput.value.trim();
+        const selectedAlgorithm = algorithmSelect?.value;
 
-            const searchTerm = searchInput.value.trim();
+        if (!searchTerm) {
+            searchResult.textContent = "Please enter something to search for.";
+            return;
+        }
 
-            if (searchTerm === "") {
-                searchResult.textContent = "Please enter something to search for.";
+        if (!selectedAlgorithm || !["binary", "linear"].includes(selectedAlgorithm)) {
+            searchResult.textContent = "Please select a search algorithm.";
+            return;
+        }
+
+        if (searchableData.length === 0) {
+            searchResult.textContent = "Please upload a CSV file first.";
+            return;
+        }
+
+        searchResult.textContent = "Searching...";
+
+        try {
+            const response = await fetch("/search", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    search_term: searchTerm,
+                    algorithm: selectedAlgorithm
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                searchResult.textContent = result.error || "Search failed.";
                 return;
             }
 
-            try {
-                const response = await fetch("/search", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        search_term: searchTerm,
-                        algorithm: selectedAlgorithm
-                    })
-                });
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    searchResult.textContent = result.error || "Search failed.";
-                    return;
-                }
-
-                if (result.index === -1) {
-                    searchResult.textContent = "Item not found.";
-                } else {
-                    searchResult.textContent = `Item found at index ${result.index}.`;
-                }
-            } catch (error) {
-                searchResult.textContent = "Could not connect to the server.";
-                console.error("Search error:", error);
+            if (result.index === -1) {
+                searchResult.textContent = "Item not found.";
+            } else {
+                searchResult.textContent = `Item found at index ${result.index}.`;
             }
-        });
-    } else {
-        console.error("Search form or its elements could not be found.");
-    }
-});
+        } catch (error) {
+            searchResult.textContent = "Could not connect to the server.";
+            console.error("Search error:", error);
+        }
+    });
+}
