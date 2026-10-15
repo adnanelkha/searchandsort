@@ -13,11 +13,31 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet">
+    <script>
+        const selectedAlgorithm = {{ algorithm_name | tojson }};
+    </script>
     <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
 </head>
 
 <body>
     <div class="card shadow title-card">
         <h1>{{ display_name }}</h1>
+    </div>
+    <div class="card shadow large-card">
+        <h2>Sort your uploaded data</h2>
+        <label for="sort-data-type">Data type:</label>
+        <select id="sort-data-type">
+            <option value="integer">Numbers (whole numbers)</option>
+            <option value="string">Text (strings)</option>
+        </select>
+        <button type="button" id="sort-button">Sort data</button>
+        <p id="sort-status" aria-live="polite">
+            Upload a CSV file on the homepage first.
+        </p>
+        <h3>Sorted results</h3>
+        <div id="sorted-results"></div>
+        <button type="button" id="export-sorted" disabled>
+            Export sorted CSV
+        </button>
     </div>
 </body>

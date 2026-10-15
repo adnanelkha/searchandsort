@@ -117,3 +117,98 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Search form or its elements could not be found.");
     }
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sortButton = document.getElementById("sort-button");
+    const dataTypeInput = document.getElementById("sort-data-type");
+    const sortStatus = document.getElementById("sort-status");
+    const sortedResults = document.getElementById("sorted-results");
+    const exportButton = document.getElementById("export-sorted");
+    if (
+        !sortButton ||
+        !dataTypeInput ||
+        !sortStatus ||
+        !sortedResults ||
+        !exportButton
+    ) {
+        return;
+    }
+    let sortedValues = null;
+    sortButton.addEventListener("click", async () => {
+        sortStatus.textContent = "Sorting your data...";
+        sortedResults.replaceChildren();
+        exportButton.disabled = true;
+        sortedValues = null;
+        try {
+            const response = await fetch("/sort", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    algorithm: selectedAlgorithm,
+                    data_type: dataTypeInput.value
+                })
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                sortStatus.textContent =
+                    result.error || "Could not sort the data.";
+                return;
+            }
+            sortedValues = result.sorted_values;
+            const list = document.createElement("ol");
+            sortedValues.forEach((value) => {
+                const item = document.createElement("li");
+                item.textContent = value;
+                list.appendChild(item);
+            });
+            sortedResults.appendChild(list);
+            sortStatus.textContent =
+                `Sorting complete! ${sortedValues.length} items sorted.`;
+            exportButton.disabled = false;
+        } catch (error) {
+            sortStatus.textContent =
+                "Could not connect to the server. Please try again.";
+            console.error("Sorting error:", error);
+        }
+    });
+    exportButton.addEventListener("click", async () => {
+        if (sortedValues === null) {
+            sortStatus.textContent = "Please sort your data first.";
+            return;
+        }
+        try {
+            const response = await fetch("/export-sorted", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    values: sortedValues
+                })
+            });
+            if (!response.ok) {
+                const result = await response.json();
+                sortStatus.textContent =
+                    result.error || "Could not export the CSV file.";
+                return;
+            }
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "sorted_data.csv";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            sortStatus.textContent = "Your sorted CSV has been downloaded.";
+        } catch (error) {
+            sortStatus.textContent =
+                "Could not export the CSV file. Please try again.";
+            console.error("CSV export error:", error);
+        }
+    });
+});

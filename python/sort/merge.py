@@ -28,5 +28,5 @@ def merge_sort(data):
             j += 1
             k += 1
         
-        return data
+    return data
     
