@@ -6,10 +6,25 @@ const searchForm = document.getElementById("search-form");
 const searchInput = document.getElementById("site-search");
 const searchResult = document.getElementById("search-result");
 const algorithmSelect = document.getElementById("algorithm");
-
+const fileInput = document.getElementById("file-input");
 let searchableData = [];
 
-if (dropZone && output) {
+if (dropZone && output && fileInput) {
+    dropZone.addEventListener("click", () => {
+        fileInput.click();
+    });
+
+    dropZone.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            fileInput.click();
+        }
+    });
+
+    fileInput.addEventListener("change", async () => {
+        await handleFile(fileInput.files[0]);
+    });
+
     dropZone.addEventListener("dragover", (event) => {
         event.preventDefault();
         dropZone.classList.add("drag-over");
@@ -22,20 +37,21 @@ if (dropZone && output) {
     dropZone.addEventListener("drop", async (event) => {
         event.preventDefault();
         dropZone.classList.remove("drag-over");
+        await handleFile(event.dataTransfer.files[0]);
+    });
 
-        const file = event.dataTransfer.files[0];
-
-        if (!file) {
-            output.textContent = "Please drop a CSV file.";
-            return;
-        }
+    async function handleFile(file) {
+        if (!file) return;
 
         if (!file.name.toLowerCase().endsWith(".csv")) {
-            output.textContent = "The file must be a CSV file.";
+            output.textContent = "Please select a CSV file.";
+            fileInput.value = "";
             return;
         }
 
         try {
+            output.textContent = "Reading file...";
+
             const contents = await file.text();
 
             searchableData = contents
@@ -50,8 +66,6 @@ if (dropZone && output) {
                 return;
             }
 
-            output.textContent = file.name;
-
             const response = await fetch("/upload-data", {
                 method: "POST",
                 headers: {
@@ -65,15 +79,16 @@ if (dropZone && output) {
             const result = await response.json();
 
             if (!response.ok) {
-                throw new Error(result.error || "File upload failed.");
+                throw new Error(result.error || "Upload failed.");
             }
 
-            console.log("Flask response:", result);
+            output.textContent = file.name;
+            console.log("Uploaded data:", result);
         } catch (error) {
             output.textContent = error.message || "Could not read the file.";
-            console.error("Upload error:", error);
+            console.error("File error:", error);
         }
-    });
+    }
 }
 
 window.addEventListener("dragover", (event) => {

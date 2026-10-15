@@ -19,13 +19,15 @@
     </div>
 
     <div class="card shadow large-card">
-        <div id="drag-and-drop" class="drag-and-drop">
-            Drop files here
+        <div id="drag-and-drop" class="drag-and-drop" role="button" tabindex="0">
+            Drop files here or click to browse
         </div>
+        <input type="file" id="file-input" accept=".csv,text/csv" hidden>
         <p class="file-text">
             <span id="myText">None</span>
         </p>
     </div>
+
 
     <div class="card shadow small-card">
         <form id="algorithm-form" action="/algorithm" method="GET">
