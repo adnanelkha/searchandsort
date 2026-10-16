@@ -1,1 +1,3 @@
 # searchandsort
+Contributions:
+Dylan - Set up the project in flask, did most of the html and javascript coding for file handling and various html elements like the drag-and-drop, dropdowns and buttons. Also managed the flask server including linking all of the various files including the python algortithms and the html, css & js for the website. Finally, I also coded the export function of the project.
